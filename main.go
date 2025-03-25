@@ -6,8 +6,7 @@ import (
 	"net/http"
 )
 
-func main() {
-	url := "https://golang.org"
+func fetch(url string) {
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -22,5 +21,19 @@ func main() {
 		return
 	}
 	fmt.Printf("Fetched %d bytes from %s\n", len(body), url)
-	
+
+}
+
+func main() {
+	urls := []string{
+		"https://golang.org",
+		"https://example.com",
+		"https://github.com",
+		"https://stackoverflow.com",
+		"https://medium.com",
+	}
+	for _, url := range urls {
+		fetch(url)
+	}
+
 }
