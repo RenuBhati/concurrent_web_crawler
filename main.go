@@ -4,10 +4,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"sync"
 )
 
-func fetch(url string) {
-
+func fetch(url string, wg *sync.WaitGroup) {
+	defer wg.Done()
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println("X Error fetching URL:", err)
@@ -25,6 +26,8 @@ func fetch(url string) {
 }
 
 func main() {
+	var wg sync.WaitGroup
+
 	urls := []string{
 		"https://golang.org",
 		"https://example.com",
@@ -33,7 +36,9 @@ func main() {
 		"https://medium.com",
 	}
 	for _, url := range urls {
-		fetch(url)
+		wg.Add(1)
+		go fetch(url, &wg)
 	}
-
+	wg.Wait()
+	fmt.Println("All fetches completed")
 }
